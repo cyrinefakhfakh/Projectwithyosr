@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/welcomebg"
     tools:context=".MainActivity">
 
     <TextView
@@ -11,19 +12,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome"
-        android:textColor="#000000"
+        android:textColor="#EAE6E6"
         android:textSize="35sp"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="85dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.27" />
 
     <Button
         android:id="@+id/login"
         android:layout_width="200sp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="200dp"
         android:backgroundTint="#012B43"
         android:text="Login"
-        tools:layout_editor_absoluteX="105dp"
-        tools:layout_editor_absoluteY="428dp" />
+        android:textColor="#FAF6F6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/sign"
@@ -31,6 +40,10 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#012B43"
         android:text="Sign up"
-        tools:layout_editor_absoluteX="105dp"
-        tools:layout_editor_absoluteY="510dp" />
+        android:textColor="#FBF8F8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/login"
+        app:layout_constraintVertical_bias="0.355" />
 </androidx.constraintlayout.widget.ConstraintLayout>
