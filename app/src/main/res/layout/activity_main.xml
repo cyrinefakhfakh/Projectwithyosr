@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome"
+        android:textColor="#000000"
+        android:textSize="35sp"
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="85dp" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#012B43"
+        android:text="Login"
+        tools:layout_editor_absoluteX="105dp"
+        tools:layout_editor_absoluteY="428dp" />
+
+    <Button
+        android:id="@+id/sign"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#012B43"
+        android:text="Sign up"
+        tools:layout_editor_absoluteX="105dp"
+        tools:layout_editor_absoluteY="510dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
