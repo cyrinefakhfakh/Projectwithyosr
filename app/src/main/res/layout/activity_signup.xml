@@ -69,9 +69,11 @@
 
     <EditText
         android:id="@+id/firstname"
-        android:layout_width="160dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="147dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="40dp"
         android:background="@drawable/input_bg"
         android:ems="15"
         android:hint="First name"
@@ -82,8 +84,8 @@
         android:paddingRight="10sp"
         android:paddingBottom="10sp"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.203"
+        app:layout_constraintEnd_toStartOf="@+id/lastname"
+        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -114,9 +116,9 @@
 
     <EditText
         android:id="@+id/lastname"
-        android:layout_width="160dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="147dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/input_bg"
         android:ems="15"
         android:hint="Last name"
@@ -127,9 +129,12 @@
         android:paddingRight="10sp"
         android:paddingBottom="10sp"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/firstname"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/firstname"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintHorizontal_bias="0.852"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/password"
