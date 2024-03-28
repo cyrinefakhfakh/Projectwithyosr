@@ -60,4 +60,4 @@
         android:layout_centerHorizontal="true"
         android:text="logout"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
