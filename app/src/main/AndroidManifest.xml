@@ -6,9 +6,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/w_logo"
+        android:icon="@drawable/logo2"
         android:label="wasalni"
-        android:roundIcon="@drawable/w_logo"
+        android:roundIcon="@drawable/logo2"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project"
         tools:targetApi="31">
