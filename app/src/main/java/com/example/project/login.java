@@ -40,7 +40,7 @@ public class login extends AppCompatActivity {
             public void onClick(View v) {
                 //verify email
                 if (!email.getText().toString().equals(validEmail) && !validEmail.equals("")) {
-                    verEmail.setText("email adress does not exist");
+                    verEmail.setText("email address does not exist");
                 }
                 //verify password
                 else if (!password.getText().toString().equals(validPassword) && !validPassword.equals("")) {
@@ -53,7 +53,7 @@ public class login extends AppCompatActivity {
                     editor.putString("password", password.getText().toString());
                     editor.apply();
                     // Create an Intent to start the SecondActivity
-                    Intent intent = new Intent(login.this, home.class);
+                    Intent intent = new Intent(login.this, MapsActivity.class);
                     startActivity(intent);
                 }
             }
