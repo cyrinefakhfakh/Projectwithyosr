@@ -38,7 +38,7 @@ public class signup extends AppCompatActivity {
                 editor2.putString("password", password.getText().toString());
                 editor2.apply();
                 // Create an Intent to start the SecondActivity
-                Intent intent = new Intent(signup.this, home.class);
+                Intent intent = new Intent(signup.this, MapsActivity.class);
                 startActivity(intent);
             }
         });

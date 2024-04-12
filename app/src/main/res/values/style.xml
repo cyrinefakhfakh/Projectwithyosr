@@ -120,9 +120,5 @@
     <style name="AppThemeFull.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <style name="StarRatingBar" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/ratingbar</item>
-        <item name="android:minHeight">18dip</item>
-        <item name="android:maxHeight">18dip</item>
-    </style>
+
 </resources>

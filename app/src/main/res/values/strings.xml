@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Project</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_map2">MapActivity2</string>
 </resources>
