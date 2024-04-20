@@ -39,11 +39,11 @@ public class login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //verify email
-                if (!email.getText().toString().equals(validEmail) && !validEmail.equals("")) {
+                if (!email.getText().toString().equals(validEmail) || email.getText().toString().equals("")) {
                     verEmail.setText("email address does not exist");
                 }
                 //verify password
-                else if (!password.getText().toString().equals(validPassword) && !validPassword.equals("")) {
+                else if (!password.getText().toString().equals(validPassword) || password.getText().toString().equals("")) {
                     verPassword.setText("Incorect password. Please try again");
                     verEmail.setText("");
 
