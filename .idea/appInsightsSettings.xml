@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.project" />
+                  <option name="mobileSdkAppId" value="1:119611023667:android:7e80e1c36e4509b06ede46" />
+                  <option name="projectId" value="leafy-firmament-419020" />
+                  <option name="projectNumber" value="119611023667" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

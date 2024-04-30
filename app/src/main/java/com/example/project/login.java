@@ -1,61 +1,92 @@
 package com.example.project;
 
+import static android.content.ContentValues.TAG;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Text;
 
 public class login extends AppCompatActivity {
-
+    FirebaseAuth mAuth;
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            Intent intent=new Intent(getApplicationContext(), MapsActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        TextView verEmail = findViewById(R.id.invalidemail);
-        TextView verPassword = findViewById(R.id.invalidpassword);
-        EditText email = findViewById(R.id.EmailAddress);
-        EditText password = findViewById(R.id.TextPassword);
+        EditText Email = findViewById(R.id.EmailAddress);
+        EditText Password = findViewById(R.id.TextPassword);
         Button loginBtn = findViewById(R.id.login);
         TextView sign = findViewById(R.id.signup);
-        SharedPreferences sharedSignIn = getSharedPreferences("shared_SignIn", MODE_PRIVATE);
-        SharedPreferences sharedLogin = getSharedPreferences("shared_login", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedLogin.edit();
-
-        String validEmail = sharedSignIn.getString("email","");
+        mAuth= FirebaseAuth.getInstance();
 
 
-        String validPassword = sharedSignIn.getString("password","");
+
+
 
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //verify email
-                if (!email.getText().toString().equals(validEmail) || email.getText().toString().equals("")) {
-                    verEmail.setText("email address does not exist");
+                String email,password;
+                email=Email.getText().toString();
+                password=Password.getText().toString();
+                if (TextUtils.isEmpty(email)){
+                    Toast.makeText(login.this, "Enter Email", Toast.LENGTH_SHORT).show();
                 }
-                //verify password
-                else if (!password.getText().toString().equals(validPassword) || password.getText().toString().equals("")) {
-                    verPassword.setText("Incorect password. Please try again");
-                    verEmail.setText("");
+                if (TextUtils.isEmpty(password)){
+                    Toast.makeText(login.this, "Enter password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(login.this, "Connected ",
+                                            Toast.LENGTH_SHORT).show();
+                                    Intent intent=new Intent(getApplicationContext(), logout.class);
+                                    startActivity(intent);
+                                    finish();
 
-                } else {
-                    //save the email and password in shared preferences
-                    editor.putString("email", email.getText().toString());
-                    editor.putString("password", password.getText().toString());
-                    editor.apply();
-                    // Create an Intent to start the SecondActivity
-                    Intent intent = new Intent(login.this, MapsActivity.class);
-                    startActivity(intent);
-                }
+                                } else {
+                                    // If sign in fails, display a message to the user.
+
+                                    Toast.makeText(login.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
+
             }
         });
 

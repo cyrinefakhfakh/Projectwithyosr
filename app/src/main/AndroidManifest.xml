@@ -17,14 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project"
         tools:targetApi="31">
-
-
+        <activity
+            android:name=".logout"
+            android:exported="false" />
         <activity
             android:name=".MapsActivity"
-            android:exported="false">
-
-        </activity>
-
+            android:exported="false"></activity>
         <activity
             android:name=".signup"
             android:exported="false" />
