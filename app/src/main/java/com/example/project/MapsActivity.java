@@ -1,15 +1,20 @@
 package com.example.project;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.geofire.GeoFire;
@@ -31,11 +36,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
+    FirebaseAuth auth;
+    Button button;
+    FirebaseUser user;
+    Button settings;
+    TextView textView;
+    private Boolean  currentLogout=false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+
+
+        auth =FirebaseAuth.getInstance();
+        button=findViewById(R.id.logoutt);
+        user=auth.getCurrentUser();
+        settings=findViewById(R.id.Driver_settings_btn);
+        button.setOnClickListener(new View.OnClickListener(){
+                                      @Override
+                                      public void onClick(View view){
+                                          currentLogout=true;
+                                          auth.signOut();
+
+                                          Intent intent=new Intent(MapsActivity.this, login.class);
+                                          startActivity(intent);
+                                          finish();
+                                      }
+                                  }
+        );
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -102,6 +133,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback);
+        if(!currentLogout){
+            String userID= FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference DriverAvailibilityRef=FirebaseDatabase.getInstance().getReference().child("Drivers Available");
+            GeoFire geofire=new GeoFire(DriverAvailibilityRef);
+            geofire.removeLocation(userID);
+        }
+
         
     }
 
@@ -109,6 +147,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+        String userID= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference DriverAvailibilityRef=FirebaseDatabase.getInstance().getReference().child("Drivers Available");
+        GeoFire geofire=new GeoFire(DriverAvailibilityRef);
+        geofire.setLocation(userID, new GeoLocation(location.getLatitude(),location.getLongitude()));
 
 
     }

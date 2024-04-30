@@ -73,7 +73,7 @@ public class login extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(login.this, "Connected ",
                                             Toast.LENGTH_SHORT).show();
-                                    Intent intent=new Intent(getApplicationContext(), logout.class);
+                                    Intent intent=new Intent(getApplicationContext(), MapsActivity.class);
                                     startActivity(intent);
                                     finish();
 
