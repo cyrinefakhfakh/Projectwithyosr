@@ -4,11 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-
-    tools:context=".login">
-
-
+    tools:context=".customer_login">
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="900dp"
@@ -128,6 +124,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
 
 
 </RelativeLayout>

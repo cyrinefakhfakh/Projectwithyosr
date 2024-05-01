@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 finally {
 
-                    Intent intent = new Intent(MainActivity.this, login.class);
+                    Intent intent = new Intent(MainActivity.this, customer_driver.class);
                     startActivity(intent);
                 }
             }

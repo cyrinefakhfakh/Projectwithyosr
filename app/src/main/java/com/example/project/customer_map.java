@@ -1,5 +1,4 @@
 package com.example.project;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -33,11 +31,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback ,
-        GoogleApiClient.ConnectionCallbacks,
+public class customer_map extends FragmentActivity implements OnMapReadyCallback ,
+    GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -50,10 +46,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleApiClient mGoogleApiClient;
 
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_customer_map);
 
 
 
@@ -62,16 +61,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         user=auth.getCurrentUser();
         settings=findViewById(R.id.Driver_settings_btn);
         button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                    currentLogout=true;
-                    auth.signOut();
+                                      @Override
+                                      public void onClick(View view){
+                                          currentLogout=true;
+                                          auth.signOut();
 
-                    Intent intent=new Intent(MapsActivity.this, login.class);
-                    startActivity(intent);
-                    finish();
-            }
-        }
+                                          Intent intent=new Intent(customer_map.this, login.class);
+                                          startActivity(intent);
+                                          finish();
+                                      }
+                                  }
         );
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -93,6 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         };
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -105,10 +105,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         buildGoogleApiClient();
-
         mMap.setMyLocationEnabled(true);
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -137,22 +135,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationCallback,
                 null /* Looper */);
     }
-
-    private void stopLocationUpdates() {
-        fusedLocationClient.removeLocationUpdates(locationCallback);
-
-
-        
-    }
-
-    private void updateLocationUI(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
-
-
-
-    }
     protected synchronized void buildGoogleApiClient(){
         mGoogleApiClient=new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -162,7 +144,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mGoogleApiClient.connect();
     }
 
+    private void stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+        if(!currentLogout){
+            String userID= FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference DriverAvailibilityRef=FirebaseDatabase.getInstance().getReference().child("Drivers Available");
+            GeoFire geofire=new GeoFire(DriverAvailibilityRef);
+            geofire.removeLocation(userID);
+        }
+
+
+    }
+
+    private void updateLocationUI(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+        String userID= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference DriverAvailibilityRef=FirebaseDatabase.getInstance().getReference().child("Drivers Available");
+        GeoFire geofire=new GeoFire(DriverAvailibilityRef);
+        geofire.setLocation(userID, new GeoLocation(location.getLatitude(),location.getLongitude()));
+
+
+    }
+
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1001;
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
