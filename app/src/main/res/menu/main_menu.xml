@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/home"
+            android:icon="@drawable/home"
+            android:title="home"/>
+        <item android:id="@+id/history"
+            android:icon="@drawable/history"
+            android:title="history"/>
+        <item android:id="@+id/setting"
+            android:icon="@drawable/settings"
+            android:title="settings"/>
+        <item android:id="@+id/support"
+            android:icon="@drawable/support"
+            android:title="support"/>
+
+
+    </group>
+
+
+</menu>

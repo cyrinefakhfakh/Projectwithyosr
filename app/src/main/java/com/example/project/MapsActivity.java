@@ -18,10 +18,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -60,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         auth =FirebaseAuth.getInstance();
         button=findViewById(R.id.logoutt);
         user=auth.getCurrentUser();
-        settings=findViewById(R.id.Driver_settings_btn);
+        settings=findViewById(R.id.menuset);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){

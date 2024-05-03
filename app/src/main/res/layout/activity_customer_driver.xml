@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/custdriver"
+    android:background="@drawable/custdriver2"
     tools:context=".customer_driver">
 
     <Button
@@ -12,9 +12,9 @@
         android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="204dp"
-        android:backgroundTint="@color/yellow"
+        android:backgroundTint="#000000"
         android:text="Customer"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textCursorDrawable="@drawable/car"
         app:cornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -26,10 +26,10 @@
         android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:backgroundTint="@color/yellow"
+        android:backgroundTint="@color/black"
         android:text="Driver"
-        android:textColor="@color/black"
-        android:textColorHighlight="#040404"
+        android:textColor="@color/white"
+
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="92dp"
         android:text=" Select your mode :"
+        android:textColor="@color/black"
         android:textSize="30dp"
         app:layout_constraintBottom_toTopOf="@+id/customer"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,3 +1,5 @@
 <resources>
     <string name="title_activity_customer_map">customer_map</string>
+    <string name="open">Open Navigation drawer</string>
+    <string name="close">Close navigation drawer</string>
 </resources>
