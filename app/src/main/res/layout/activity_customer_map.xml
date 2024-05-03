@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".customer_map"
+    tools:context=".customer_map">
     tools:openDrawer="start">
    <com.google.android.material.navigation.NavigationView
     android:layout_width="wrap_content"
@@ -61,18 +61,45 @@
                 android:id="@+id/call"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="36dp"
                 android:backgroundTint="@color/yellow"
-                android:drawableStart="@android:drawable/ic_menu_call"
                 android:drawableTint="@color/black"
                 android:text="Find a driver"
                 android:textColor="#000000"
                 app:cornerRadius="10dp"
                 app:icon="@android:drawable/stat_sys_phone_call"
                 app:iconTint="#114313"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/money" />
+
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="330dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/back"
+                android:drawableStart="@drawable/customsearch"
+                android:drawablePadding="30sp"
+                app:layout_constraintBottom_toTopOf="@+id/money"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.508"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/money"
+                android:layout_width="330dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="80dp"
+                android:background="@drawable/back"
+                android:drawableStart="@drawable/money"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.508"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

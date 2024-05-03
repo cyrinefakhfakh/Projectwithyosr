@@ -1,9 +1,12 @@
 package com.example.project;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +31,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback ,
@@ -44,6 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     TextView textView;
     private Boolean  currentLogout=false;
     private GoogleApiClient mGoogleApiClient;
+    private DatabaseReference driverLocationRef;
 
 
     @Override
@@ -51,12 +60,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+      driverLocationRef = FirebaseDatabase.getInstance().getReference("driver_locations");
+
 
 
         auth =FirebaseAuth.getInstance();
         button=findViewById(R.id.logoutt);
         user=auth.getCurrentUser();
         settings=findViewById(R.id.menuset);
+
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -88,6 +100,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
     }
+    private void updateDriverLocation(double latitude, double longitude) {
+        // Get the current user ID
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Create a map to store the driver's location
+        Map<String, Object> locationMap = new HashMap<>();
+        locationMap.put("latitude", latitude);
+        locationMap.put("longitude", longitude);
+
+        // Update the driver's location in the database
+        driverLocationRef.child(userId).setValue(locationMap);
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -158,6 +183,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mGoogleApiClient.connect();
     }
 
+
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1001;
 
     @Override
@@ -169,6 +195,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnectionSuspended(int i) {
 
     }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

@@ -1,4 +1,5 @@
 package com.example.project;
+
 import static android.app.PendingIntent.getActivity;
 
 import android.Manifest;
@@ -20,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,7 +41,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 public class customer_map extends FragmentActivity implements OnMapReadyCallback ,
-    GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -51,9 +53,14 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
     TextView textView;
     private Boolean  currentLogout=false;
     private GoogleApiClient mGoogleApiClient;
+    private Button call;
+    private String userid;
+    private LatLng pick;
+    private DatabaseReference userref;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
+    private Location lastLocation = null;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -63,17 +70,30 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
         return super.onOptionsItemSelected(item);
     }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_map);
+        call=findViewById(R.id.call);
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (lastLocation != null) {
+                    GeoFire geoFire = new GeoFire(userref);
+                    geoFire.setLocation(userid, new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()));
+                    pick = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(pick).title("Pick customer from here"));
+                } else {
+
+                }
+            }
+        });
+
+
         Button set=findViewById(R.id.menuset);
         set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Open the navigation drawer when settings button is clicked
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
@@ -82,6 +102,7 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
         drawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -93,20 +114,19 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
-
-
-
         auth =FirebaseAuth.getInstance();
         button=findViewById(R.id.logoutt);
         user=auth.getCurrentUser();
+        userid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userref=FirebaseDatabase.getInstance().getReference().child("users request");
+
         button.setOnClickListener(new View.OnClickListener(){
                                       @Override
                                       public void onClick(View view){
                                           currentLogout=true;
                                           auth.signOut();
 
-                                          Intent intent=new Intent(customer_map.this, login.class);
+                                          Intent intent=new Intent(customer_map.this, customer_login.class);
                                           startActivity(intent);
                                           finish();
                                       }
@@ -132,7 +152,6 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
         };
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -147,6 +166,7 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -157,7 +177,6 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
     protected void onPause() {
         super.onPause();
         stopLocationUpdates();
-
     }
 
     private void startLocationUpdates() {
@@ -175,6 +194,7 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
                 locationCallback,
                 null /* Looper */);
     }
+
     protected synchronized void buildGoogleApiClient(){
         mGoogleApiClient=new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -192,8 +212,6 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
             GeoFire geofire=new GeoFire(DriverAvailibilityRef);
             geofire.removeLocation(userID);
         }
-
-
     }
 
     private void updateLocationUI(Location location) {
@@ -204,12 +222,9 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
         DatabaseReference DriverAvailibilityRef=FirebaseDatabase.getInstance().getReference().child("Drivers Available");
         GeoFire geofire=new GeoFire(DriverAvailibilityRef);
         geofire.setLocation(userID, new GeoLocation(location.getLatitude(),location.getLongitude()));
-
-
     }
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1001;
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -230,6 +245,7 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
     public void onBackPressed() {
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
+
         }
         else {
             super.onBackPressed();

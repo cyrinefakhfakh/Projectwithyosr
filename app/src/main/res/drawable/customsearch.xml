@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Define the drawable to use as the search icon -->
+    <item android:drawable="@android:drawable/ic_search_category_default"
+        android:width="30dp"
+        android:height="30dp"
+        android:gravity="center"
+        />
+</layer-list>
