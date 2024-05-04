@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".customer_map">
+    tools:context=".customer_map"
     tools:openDrawer="start">
    <com.google.android.material.navigation.NavigationView
     android:layout_width="wrap_content"
@@ -83,6 +83,7 @@
                 android:background="@drawable/back"
                 android:drawableStart="@drawable/customsearch"
                 android:drawablePadding="30sp"
+                android:hint="Where will you go ?"
                 app:layout_constraintBottom_toTopOf="@+id/money"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.508"
@@ -91,13 +92,14 @@
 
             <EditText
                 android:id="@+id/money"
-                android:layout_width="330dp"
+                android:layout_width="150dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="76dp"
                 android:background="@drawable/back"
                 android:drawableStart="@drawable/money"
+                android:hint="Put your price"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.508"
+                app:layout_constraintHorizontal_bias="0.16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

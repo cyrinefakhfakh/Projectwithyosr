@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,21 +23,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
 public class customer_login extends AppCompatActivity {
-    FirebaseAuth mAuth;
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent intent=new Intent(getApplicationContext(), customer_map.class);
-            startActivity(intent);
-            finish();
-        }
-    }
+    private FirebaseAuth mAuth;
+    private DatabaseReference usersRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,23 +36,19 @@ public class customer_login extends AppCompatActivity {
         EditText Password = findViewById(R.id.TextPassword);
         Button loginBtn = findViewById(R.id.login);
         TextView sign = findViewById(R.id.signup);
-        mAuth= FirebaseAuth.getInstance();
-
-
-
-
-
+        mAuth = FirebaseAuth.getInstance();
+        usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email,password;
-                email=Email.getText().toString();
-                password=Password.getText().toString();
-                if (TextUtils.isEmpty(email)){
+                String email = Email.getText().toString();
+                String password = Password.getText().toString();
+                if (TextUtils.isEmpty(email)) {
                     Toast.makeText(customer_login.this, "Enter Email", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                if (TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(password)) {
                     Toast.makeText(customer_login.this, "Enter password", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -73,24 +57,15 @@ public class customer_login extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    // Retrieve the authenticated user
+                                    // Sign in success, update UI with the signed-in user's information
                                     FirebaseUser user = mAuth.getCurrentUser();
-
-                                    // Check if the user exists
                                     if (user != null) {
                                         // Get user's unique ID
                                         String userId = user.getUid();
-
                                         // Add the user to the database
-
-                                        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
                                         usersRef.child(userId).child("email").setValue(user.getEmail());
-                                        // You can add more information here if needed
-
-                                        Toast.makeText(customer_login.this, "Connected", Toast.LENGTH_SHORT).show();
-
                                         // Start the customer_map activity
-                                        Intent intent = new Intent(getApplicationContext(), customer_map.class);
+                                        Intent intent = new Intent(customer_login.this, customer_map.class);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -112,13 +87,5 @@ public class customer_login extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-
-
-
-
-
     }
 }

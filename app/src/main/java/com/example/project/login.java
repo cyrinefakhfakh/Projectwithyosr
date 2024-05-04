@@ -28,6 +28,8 @@ import org.w3c.dom.Text;
 
 public class login extends AppCompatActivity {
     FirebaseAuth mAuth;
+    private String onlinedriverid;
+    private DatabaseReference driverdataref;
     @Override
     public void onStart() {
         super.onStart();
@@ -49,6 +51,10 @@ public class login extends AppCompatActivity {
         Button loginBtn = findViewById(R.id.login);
         TextView sign = findViewById(R.id.signup);
         mAuth= FirebaseAuth.getInstance();
+        mAuth= FirebaseAuth.getInstance();
+        onlinedriverid=mAuth.getCurrentUser().getUid();
+        driverdataref=FirebaseDatabase.getInstance().getReference().child("users").child("drivers").child(onlinedriverid);
+
 
 
 
@@ -73,8 +79,13 @@ public class login extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+                                    driverdataref.setValue(true);
+                                    Intent driverIntent=new Intent(login.this, MapsActivity.class);
+                                    startActivity(driverIntent);
                                     // Retrieve the authenticated user
+                                    Toast.makeText(login.this, "register succesfully", Toast.LENGTH_SHORT).show();
                                     FirebaseUser user = mAuth.getCurrentUser();
+
 
                                     // Check if the user exists
                                     if (user != null) {

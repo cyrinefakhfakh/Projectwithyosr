@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -19,12 +20,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
+
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryDataEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.geofire.GeoFire;
@@ -49,18 +55,21 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
     FirebaseAuth auth;
     Button button;
     FirebaseUser user;
-    Button settings;
-    TextView textView;
     private Boolean  currentLogout=false;
     private GoogleApiClient mGoogleApiClient;
     private Button call;
     private String userid;
     private LatLng pick;
+    private DatabaseReference driverloc;
     private DatabaseReference userref;
+    private int radius=1;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
-    private Location lastLocation = null;
+
+    private Boolean driverFound=false;
+    private String driverfoundid;
+    private Location lastLocation;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -78,16 +87,21 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
         call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (lastLocation != null) {
+                if (locationCallback != null) {
                     GeoFire geoFire = new GeoFire(userref);
                     geoFire.setLocation(userid, new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()));
                     pick = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(pick).title("Pick customer from here"));
+                    call.setText("Getting your driver");
+                    Getclosedrive();
                 } else {
-
+                    // Handle the case where lastLocation is null
+                    mMap.addMarker(new MarkerOptions().position(pick).title("Pick customer from here"));
+                    call.setText("Getting your driver");
                 }
             }
         });
+
 
 
         Button set=findViewById(R.id.menuset);
@@ -118,8 +132,8 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
         button=findViewById(R.id.logoutt);
         user=auth.getCurrentUser();
         userid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-        userref=FirebaseDatabase.getInstance().getReference().child("users request");
-
+        userref=FirebaseDatabase.getInstance().getReference().child("users");
+        driverloc=FirebaseDatabase.getInstance().getReference().child("Drivers Available");
         button.setOnClickListener(new View.OnClickListener(){
                                       @Override
                                       public void onClick(View view){
@@ -146,10 +160,57 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
+                    lastLocation = location;
                     updateLocationUI(location);
                 }
             }
         };
+    }
+
+    private void Getclosedrive() {
+        GeoFire geoFire=new GeoFire(driverloc);
+        GeoQuery geoQuery=geoFire.queryAtLocation(new GeoLocation(pick.latitude,pick.longitude),radius);
+
+        geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
+            @Override
+            public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onDataExited(DataSnapshot dataSnapshot) {
+                if(!driverFound){
+                    driverFound=true;
+                    String key = dataSnapshot.getKey(); // Initialize key variable here
+                    driverfoundid = key;
+                }
+
+            }
+
+            @Override
+            public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                if(!driverFound){
+                    radius=radius+1;
+                    Getclosedrive();
+                }
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
     }
 
     @Override
@@ -163,6 +224,8 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
                     MY_PERMISSIONS_REQUEST_LOCATION);
             return;
         }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        startLocationUpdates();
         buildGoogleApiClient();
         mMap.setMyLocationEnabled(true);
     }
@@ -215,14 +278,26 @@ public class customer_map extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateLocationUI(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
-        String userID= FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference DriverAvailibilityRef=FirebaseDatabase.getInstance().getReference().child("Drivers Available");
-        GeoFire geofire=new GeoFire(DriverAvailibilityRef);
-        geofire.setLocation(userID, new GeoLocation(location.getLatitude(),location.getLongitude()));
+        if (mMap == null) {
+            return;
+        }
+        try {
+            if (location != null) {
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                if (auth.getCurrentUser() != null) { // Check if FirebaseUser object is not null
+                    String userId = auth.getCurrentUser().getUid();
+                    // Your code here that depends on the FirebaseUser object
+                }
+            } else {
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            }
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
+        }
     }
+
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1001;
 
